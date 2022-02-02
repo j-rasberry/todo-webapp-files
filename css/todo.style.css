@@ -1,0 +1,155 @@
+:root{
+    --semi-transparent-black:rgba(0,0,0,.8);
+}
+
+body{
+    display:grid;
+    grid-template-rows: 100px 1fr ;
+    
+    
+    background-size: cover;
+    max-width: 100vw;
+    max-height: 100vh;
+   
+    background-color: blanchedalmond;
+    
+   
+
+}
+body,ul{
+    margin:0;
+    padding:0;
+}
+
+header{
+    display: grid;
+    grid-template-columns: 1fr 50px;
+    grid-template-rows: 100px;
+    justify-content: center;
+    align-items: baseline;
+
+    color:white;
+    background-color: var(--semi-transparent-black);
+
+}
+#header-logo-title{
+    margin-left: 10px;
+}
+#settings-menu{
+    
+    height:100%;
+    width:100%;
+}
+#settings-menu-hamburger-image{
+align-self: center;
+justify-self: center;
+}
+
+/* Wrappers */
+#list-wrapper{
+    
+    box-sizing: border-box;
+
+    height:100%;
+    width:100%;
+    overflow-y: scroll;
+
+
+    display:grid;
+    justify-items: justify;
+
+    padding:10px 25px 65px 25px;
+    
+}
+
+#list-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+  
+  
+  #list-wrapper {
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+  }
+/* list */
+
+#ltem-list{
+
+    
+ 
+}
+#item-list li{
+    display:grid;
+    grid-template-columns: 50px 1fr 50px 50px;
+    grid-template-rows: 100%;
+   
+
+    list-style-type: none;
+    background:white;
+
+    padding:10px;
+    margin-bottom: 2px;
+    border-radius: 10px;
+}
+/* select checkbox */
+.list-checked-checkbox{
+    -webkit-appearance: none;
+	background-color: white;
+	border: 1px solid white;
+    border: 1px solid black;
+
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+	padding: 9px;
+	border-radius: 50%;
+	display: inline-block;
+	position: relative;
+    width:25px;
+    height:25px;
+
+}
+.list-checked-checkbox:active{
+    	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+
+}
+.list-checked-checkbox:checked{
+    background-color: red;
+	border: 1px solid black;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
+	color: #99a1a7;
+}
+
+#list-item-input-button{
+   
+    display:grid;
+    grid-template-columns:50px 1fr;
+    grid-template-rows: 50px;
+    grid-template-areas: 'list-button list-text-input ';
+    position: fixed;
+    bottom:0;
+    right:0;
+    left: 0;
+    width:90%;
+    margin:0 auto;
+    border-radius: 25px;
+    padding:10px;
+    border:0;
+    user-select: none;
+}
+#add-item-button-input{
+    grid-area: list-text-input;
+    border:0;
+    background:var(--semi-transparent-black);
+    color:white;
+    border-radius: 0 15px 15px 0;
+}
+#add-item-button-input:focus{
+    outline:none;
+}
+#add-item-button{
+    grid-area: list-button;
+    background: var(--semi-transparent-black);
+    color:white;
+    border:0;
+    font-size: 25px;
+    border-radius:  15px 0 0 15px ;
+}
