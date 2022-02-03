@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,18 +8,27 @@
     <title>Get Things done</title>
     <link rel="stylesheet" href="./css/todo.style.css">
 </head>
+
 <body>
-    <header><h1 id="header-logo-title">ToDO Title</h1> <div class="settings-menu" id="settings-menu"> <img src="./res/hamburger.svg" alt="" srcset="" height="25px" width="25px" id="settings-menu-hamburger-image"></div></header>
+    <header>
+        <h1 id="header-logo-title">ToDO Title</h1>
+        <div class="settings-menu" id="settings-menu"> <img src="./res/hamburger.svg" alt="" srcset="" height="25px" width="25px" id="settings-menu-hamburger-image"></div>
+    </header>
+    <div id="settings-menu">
+        <ul class="hidden" id="settings-menu-item-list">
+            <li class="settings-menu-item " id="settings-menu-item">custom background</li>
+            <li class="settings-menu-item " id="settings-menu-item-clear-data">Clear UserData</li>
+        </ul>
+    </div>
     <div id="list-wrapper">
-    <ul id="item-list">
+        <ul id="item-list">
+        </ul>
+        <div id="list-item-input-button"><input type="text" placeholder="Add your new task" name="" id="add-item-button-input" autocomplete="off"><button id="add-item-button">+</button></div>
 
-        <li><input type="checkbox" name="" class="list-checked-checkbox" id="'+ id + '_checkbox"> <p>lorem500</p><button id= '"id + _delete'>d</button><button id= '"id" + _edit'>e</button></li>
-    </ul>
-    <div id="list-item-input-button"><input type="text" placeholder="Add your new task" name="" id="add-item-button-input"><button id="add-item-button">+</button></div>
+    </div>
 
-</div>
 
-    
 </body>
 <script src="./todo.js"></script>
+
 </html>
