@@ -1,17 +1,37 @@
 var listItems = new Map();
 var listItemCounter = 0;
-
-//[["id","Display name","Item discription"]];
+// id,description,completed,timestamp of completion
+//[["id","Item discription",true,"timestamp"]];
 
 //Local Storage Minipulation
 function initUserData() {
+    listItems.forEach(elem => {
+        console.log(elem);
 
+        if (elem[1] === "") {
+            //[["id","Item discription",true,"timestamp"]];
+            listItems.set(elem[0], [listItemCounter + "", "Double click to edit description", false, "TIMESTAMP"]);
+            console.log(listItems.size);
+            document.getElementById('item-list').innerHTML += '<li><input type="checkbox" class="list-checked-checkbox" id="' + elem[0] + '_checkbox"><p id="' + elem[0] + '_item-description" ondblclick="editEntry(' + elem[0] + ')">Double click to edit description</p> <button id= "' + elem[0] + '_delete"><img src="./res/delete.svg"></button></li>';
+
+        } else {
+            ItemDescription = document.getElementById('add-item-button-input').value
+
+            console.log(listItems.size);
+            document.getElementById('item-list').innerHTML += '<li><input type="checkbox" class="list-checked-checkbox" id="' + elem[0] + '_checkbox"><p id="' + elem[0] + '_item-description" ondblclick="editEntry(' + elem[0] + ')">' + elem[1] + '</p> <button id= "' + elem[0] + '_delete"><img src="./res/delete.svg"></button></li>';
+
+
+        }
+
+    });
 }
 
 function loadUserData() {
     window.listItems = new Map(JSON.parse(localStorage.getItem('userdata')));
     console.log("Loaded user data\n" + listItems);
-    initDisplay();
+    listItemCounter = listItems.size
+
+    initUserData();
 
 }
 
@@ -30,7 +50,6 @@ function saveUserData() {
 window.addEventListener('load', function() {
     if (localStorage.getItem('userdata') != null) {
         loadUserData();
-        initalizeListItems();
     } else {
         initUserData();
     }
@@ -38,6 +57,7 @@ window.addEventListener('load', function() {
 
 
 })
+
 //Action events
 var settingsVisible = false;
 document.getElementById('settings-menu-hamburger-image').addEventListener('click', function() {
@@ -55,15 +75,19 @@ document.getElementById('settings-menu-hamburger-image').addEventListener('click
 
 document.getElementById("add-item-button").addEventListener('click', function() {
     if (document.getElementById('add-item-button-input').value === "") {
-        listItems.set(listItemCounter += 1, ["placeholder text", "discription text"]);
+        //[["id","Item discription",true,"timestamp"]];
+        listItems.set(listItemCounter += 1, [listItemCounter + "", "Double click to edit description", false, "TIMESTAMP"]);
         console.log(listItems.size);
-        document.getElementById('item-list').innerHTML += '<li><input type="checkbox" class="list-checked-checkbox" id="' + listItemCounter + '_checkbox"><p id="' + listItemCounter + '_item-description" ondblclick="editEntry(' + listItemCounter + ')">Placeholder text</p> <button id= "' + listItemCounter + '_delete"><img src="./res/delete.svg"></button></li>';
+        document.getElementById('item-list').innerHTML += '<li><input type="checkbox" class="list-checked-checkbox" id="' + listItemCounter + '_checkbox"><p id="' + listItemCounter + '_item-description" ondblclick="editEntry(' + listItemCounter + ')">Double click to edit description</p> <button id= "' + listItemCounter + '_delete"><img src="./res/delete.svg"></button></li>';
+        saveUserData();
 
     } else {
         ItemDescription = document.getElementById('add-item-button-input').value
-        listItems.set(listItemCounter += 1, ["placeholder text", "discription text"])
+        listItems.set(listItemCounter += 1, [listItemCounter + "", ItemDescription, false, "TIMESTAMP"]);
+
         console.log(listItems.size);
         document.getElementById('item-list').innerHTML += '<li><input type="checkbox" class="list-checked-checkbox" id="' + listItemCounter + '_checkbox"><p id="' + listItemCounter + '_item-description" ondblclick="editEntry(' + listItemCounter + ')">' + ItemDescription + '</p> <button id= "' + listItemCounter + '_delete"><img src="./res/delete.svg"></button></li>';
+        saveUserData();
 
 
     }
@@ -71,12 +95,26 @@ document.getElementById("add-item-button").addEventListener('click', function() 
 
 });
 
-// document.getElementById("edit-item-button").addEventListener('click', ()=>{
+function editEntry(itemID) {
+    console.log(document.getElementById(itemID + "_item-description").textContent);
+    var descriptionPlaceholder = document.getElementById(itemID + "_item-description").textContent;
 
-// });
+    document.getElementById(itemID + "_item-description").innerHTML = '<input type="text" id="descriptionEditInput" value="' + descriptionPlaceholder + '" onfocusout="confirmEntry(' + itemID + ')"></input>'
+
+
+}
+
+function confirmEntry(itemID) {
+    var descriptionText = document.getElementById("descriptionEditInput").value;
+
+    document.getElementById(itemID + "_item-description").innerHTML = '<p id="' + listItemCounter + '_item-description" ondblclick="editEntry(' + listItemCounter + ')>' + descriptionText + '</p>';
+
+}
+
 // document.getElementById("remove-item-button").addEventListener('click', ()=>{
 
 // });
+
 //Keyboard Action Events
 window.addEventListener("keydown", function(event) {
 
@@ -100,36 +138,11 @@ window.addEventListener("keydown", function(event) {
     }
 }, true);
 //Display Updates
-function initDisplay() {
-    listItems.forEach(item => {
-        item.getItem()
-    });
-}
 
-function updateDisplay() {
 
-}
-
-function initalizeListItems() {
-
-}
 
 //TODO Functions.
-function editEntry(itemID) {
-    console.log(document.getElementById(itemID + "_item-description").textContent);
-    var descriptionPlaceholder = document.getElementById(itemID + "_item-description").textContent;
 
-    document.getElementById(itemID + "_item-description").innerHTML = '<input type="text" id="descriptionEditInput" value="' + descriptionPlaceholder + '" onfocusout="confirmEntry(' + itemID + ')"></input>'
-
-
-}
-
-function confirmEntry(itemID) {
-    var descriptionText = document.getElementById("descriptionEditInput").value;
-
-    document.getElementById(itemID + "_item-description").innerHTML = '<p id="' + listItemCounter + '_item-description" ondblclick="editEntry(' + listItemCounter + ')>' + descriptionText + '</p>';
-
-}
 
 document.getElementById('header-logo-title').addEventListener('dblclick', function() {
         editTitle();
@@ -153,3 +166,10 @@ function confirmTitle() {
     document.getElementById("header-logo-title").innerHTML = descriptionText;
 
 }
+
+document.getElementById('settings-menu-item-clear-data').addEventListener('click', function() {
+    localStorage.removeItem('userdata');
+    listItems.clear();
+    document.getElementById('item-list').innerHTML = "";
+
+});
