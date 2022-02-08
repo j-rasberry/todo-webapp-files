@@ -1,25 +1,20 @@
 var listItems = new Map();
 var listItemCounter = 0;
 var projectTitle;
-// id,description,completed,timestamp of completion
-//[["id","Item discription",true,"timestamp"]];
+
 
 //Local Storage Minipulation
 function initUserData() {
     listItems.forEach(elem => {
-        console.log(elem);
 
         if (elem[1] === "") {
-            //[["id","Item discription",true,"timestamp"]];
             listItems.set(elem[0], [listItemCounter + "", "Double click to edit description", false, "TIMESTAMP"]);
-            console.log(listItems.size);
-            document.getElementById('item-list').innerHTML += '<li><input type="checkbox" class="list-checked-checkbox" id="' + elem[0] + '_checkbox"><p id="' + elem[0] + '_item-description" ondblclick="editEntry(' + elem[0] + ')">Double click to edit description</p> <button id= "' + elem[0] + '_delete"><img src="./res/delete.svg"></button></li>';
+            document.getElementById('item-list').innerHTML += '<li id="list-item-' + elem[0] + '"><input type="checkbox" class="list-checked-checkbox" id="' + elem[0] + '_checkbox"><p id="' + elem[0] + '_item-description" ondblclick="editEntry(' + elem[0] + ')">Double click to edit description</p> <button class="deleteButton" id= "' + elem[0] + '_delete" onclick="deleteEntry(' + elem[0] + ')"><img src="./res/delete.svg"></button></li>';
 
         } else {
             ItemDescription = document.getElementById('add-item-button-input').value
 
-            console.log(listItems.size);
-            document.getElementById('item-list').innerHTML += '<li><input type="checkbox" class="list-checked-checkbox" id="' + elem[0] + '_checkbox"><p id="' + elem[0] + '_item-description" ondblclick="editEntry(' + elem[0] + ')">' + elem[1] + '</p> <button id= "' + elem[0] + '_delete"><img src="./res/delete.svg"></button></li>';
+            document.getElementById('item-list').innerHTML += '<li id="list-item-' + elem[0] + '"><input type="checkbox" class="list-checked-checkbox" id="' + elem[0] + '_checkbox"><p id="' + elem[0] + '_item-description" ondblclick="editEntry(' + elem[0] + ')">' + elem[1] + '</p> <button class="deleteButton" id= "' + elem[0] + '_delete" onclick="deleteEntry(' + elem[0] + ')"><img src="./res/delete.svg"></button></li>';
 
 
         }
@@ -29,11 +24,16 @@ function initUserData() {
 
 function loadUserData() {
     window.listItems = new Map(JSON.parse(localStorage.getItem('userdata')));
-    console.log("Loaded user data\n" + listItems);
     listItemCounter = listItems.size;
     document.getElementById("custom-background-input").value = localStorage.getItem("custom-background");
     document.body.setAttribute("style", "background-image:url(" + localStorage.getItem("custom-background") + ")");
-    document.getElementById("header-logo-title").textContent = localStorage.getItem('list-title');
+    if (localStorage.getItem('list-title') == null) {
+        document.getElementById("header-logo-title").textContent = "New Project";
+
+    } else {
+        document.getElementById("header-logo-title").textContent = localStorage.getItem('list-title');
+
+    }
     initUserData();
 
 
@@ -45,8 +45,6 @@ function saveUserData() {
     localStorage.removeItem("userdata");
     var userDataListMap = JSON.stringify(Array.from(listItems.entries()));
     localStorage.setItem("userdata", userDataListMap)
-    console.log("Saved User data");
-    console.log(localStorage);
 }
 
 
@@ -55,11 +53,13 @@ function saveUserData() {
 //Window events
 window.addEventListener('load', function() {
 
-    if (localStorage.length != 0) {
+    if (localStorage.getItem('userdata') != '[]' || localStorage.getItem('list-title') != null) {
+
         loadUserData();
     } else {
         initUserData();
     }
+
 
 
 
@@ -68,31 +68,48 @@ window.addEventListener('load', function() {
 //Action events
 
 
+window.addEventListener("keydown", function(event) {
+
+    if (event.defaultPrevented) {
+        return;
+    }
+    var handled = false;
+    if (event.key == 'Enter') {
+
+        if (document.getElementById('add-item-button-input') === document.activeElement) {
+            addItemToList();
+        }
+    } else if (event.keyCode !== undefined) {}
+    if (handled) {
+        event.preventDefault();
+    }
+}, true);
 
 document.getElementById("add-item-button").addEventListener('click', function() {
+
+    addItemToList();
+});
+
+function addItemToList() {
     if (document.getElementById('add-item-button-input').value === "") {
-        //[["id","Item discription",true,"timestamp"]];
         listItems.set(listItemCounter += 1, [listItemCounter + "", "Double click to edit description", false, "TIMESTAMP"]);
-        console.log(listItems.size);
-        document.getElementById('item-list').innerHTML += '<li><input type="checkbox" class="list-checked-checkbox" id="' + listItemCounter + '_checkbox"><p id="' + listItemCounter + '_item-description" ondblclick="editEntry(' + listItemCounter + ')">Double click to edit description</p> <button id= "' + listItemCounter + '_delete"><img src="./res/delete.svg"></button></li>';
+        document.getElementById('item-list').innerHTML += '<li id="list-item-' + listItemCounter + '"><input type="checkbox" class="list-checked-checkbox" id="' + listItemCounter + '_checkbox"><p id="' + listItemCounter + '_item-description" ondblclick="editEntry(' + listItemCounter + ')">Double click to edit description</p> <button class="deleteButton" id= "' + listItemCounter + '_delete" onclick="deleteEntry(' + listItemCounter + ')"><img src="./res/delete.svg"></button></li>';
         saveUserData();
 
     } else {
         ItemDescription = document.getElementById('add-item-button-input').value
         listItems.set(listItemCounter += 1, [listItemCounter + "", ItemDescription, false, "TIMESTAMP"]);
 
-        console.log(listItems.size);
-        document.getElementById('item-list').innerHTML += '<li><input type="checkbox" class="list-checked-checkbox" id="' + listItemCounter + '_checkbox"><p id="' + listItemCounter + '_item-description" ondblclick="editEntry(' + listItemCounter + ')">' + ItemDescription + '</p> <button id= "' + listItemCounter + '_delete"><img src="./res/delete.svg"></button></li>';
+        document.getElementById('item-list').innerHTML += '<li id="list-item-' + listItemCounter + '"><input type="checkbox" class="list-checked-checkbox" id="' + listItemCounter + '_checkbox"><p id="' + listItemCounter + '_item-description" ondblclick="editEntry(' + listItemCounter + ')">' + ItemDescription + '</p> <button class="deleteButton" id= "' + listItemCounter + '_delete" onclick="deleteEntry(' + listItemCounter + ')"><img src="./res/delete.svg"></button></li>';
         saveUserData();
 
 
     }
     document.getElementById('add-item-button-input').value = ""
-
-});
+}
 
 function editEntry(itemID) {
-    console.log(document.getElementById(itemID + "_item-description").textContent);
+    document.getElementById(itemID + "_item-description").removeAttribute("ondblclick");
     var descriptionPlaceholder = document.getElementById(itemID + "_item-description").textContent;
 
     document.getElementById(itemID + "_item-description").innerHTML = '<input type="text" id="descriptionEditInput" value="' + descriptionPlaceholder + '" onfocusout="confirmEntry(' + itemID + ')"></input>'
@@ -101,45 +118,20 @@ function editEntry(itemID) {
 }
 
 function confirmEntry(itemID) {
+    document.getElementById(itemID + "_item-description").setAttribute("ondblclick", "editEntry(" + itemID + ")");
     var descriptionText = document.getElementById("descriptionEditInput").value;
-
-    document.getElementById(itemID + "_item-description").innerHTML = '<p id="' + listItemCounter + '_item-description" ondblclick="editEntry(' + listItemCounter + ')>' + descriptionText + '</p>';
+    document.getElementById(itemID + "_item-description").innerHTML = descriptionText;
 
 }
 
-// document.getElementById("remove-item-button").addEventListener('click', ()=>{
+function deleteEntry(itemID) {
+    listItemID = "list-item-" + itemID;
+    document.getElementById(listItemID).remove();
 
-// });
+    listItems.delete(itemID);
+    saveUserData();
 
-//Keyboard Action Events
-window.addEventListener("keydown", function(event) {
-
-    if (event.defaultPrevented) {
-        return; // Should do nothing if the default action has been cancelled
-    }
-
-    var handled = false;
-    if (event.key == 'Enter') {
-        // Handle the event with KeyboardEvent.key and set handled true.
-        console.log("enter was pressed.")
-    } else if (event.keyCode !== undefined) {
-        // Handle the event with KeyboardEvent.keyCode and set handled true.
-        console.log("other was pressed.")
-
-    }
-
-    if (handled) {
-        // Suppress "double action" if event handled
-        event.preventDefault();
-    }
-}, true);
-//Display Updates
-
-
-
-//TODO Functions.
-
-
+}
 document.getElementById('header-logo-title').addEventListener('dblclick', function() {
         editTitle();
     }
@@ -148,7 +140,6 @@ document.getElementById('header-logo-title').addEventListener('dblclick', functi
 
 
 function editTitle() {
-    console.log(document.getElementById("header-logo-title").textContent);
     var descriptionPlaceholder = document.getElementById("header-logo-title").textContent;
 
     document.getElementById("header-logo-title").innerHTML = '<input type="text" id="descriptionEditInput" value="' + descriptionPlaceholder + '" onfocusout="confirmTitle()"></input>'
