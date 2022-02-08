@@ -1,5 +1,6 @@
 var listItems = new Map();
 var listItemCounter = 0;
+var projectTitle;
 // id,description,completed,timestamp of completion
 //[["id","Item discription",true,"timestamp"]];
 
@@ -29,9 +30,12 @@ function initUserData() {
 function loadUserData() {
     window.listItems = new Map(JSON.parse(localStorage.getItem('userdata')));
     console.log("Loaded user data\n" + listItems);
-    listItemCounter = listItems.size
+    listItemCounter = listItems.size;
+
 
     initUserData();
+    document.getElementById("custom-background-input").value = localStorage.getItem("custom-background");
+    document.body.setAttribute("style", "background-image:url(" + localStorage.getItem("custom-background") + ")");
 
 }
 
@@ -48,7 +52,8 @@ function saveUserData() {
 
 //Window events
 window.addEventListener('load', function() {
-    if (localStorage.getItem('userdata') != null) {
+
+    if (localStorage.length != 0) {
         loadUserData();
     } else {
         initUserData();
@@ -59,18 +64,7 @@ window.addEventListener('load', function() {
 })
 
 //Action events
-var settingsVisible = false;
-document.getElementById('settings-menu-hamburger-image').addEventListener('click', function() {
-    if (settingsVisible == false) {
-        document.getElementById('settings-menu-item-list').classList.remove('hidden');
-        settingsVisible = true;
-    } else if (settingsVisible == true) {
-        document.getElementById('settings-menu-item-list').classList.add('hidden');
-        settingsVisible = false;
-    }
 
-
-});
 
 
 document.getElementById("add-item-button").addEventListener('click', function() {
@@ -166,10 +160,3 @@ function confirmTitle() {
     document.getElementById("header-logo-title").innerHTML = descriptionText;
 
 }
-
-document.getElementById('settings-menu-item-clear-data').addEventListener('click', function() {
-    localStorage.removeItem('userdata');
-    listItems.clear();
-    document.getElementById('item-list').innerHTML = "";
-
-});
