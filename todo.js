@@ -31,11 +31,13 @@ function loadUserData() {
     window.listItems = new Map(JSON.parse(localStorage.getItem('userdata')));
     console.log("Loaded user data\n" + listItems);
     listItemCounter = listItems.size;
-
-
-    initUserData();
     document.getElementById("custom-background-input").value = localStorage.getItem("custom-background");
     document.body.setAttribute("style", "background-image:url(" + localStorage.getItem("custom-background") + ")");
+    document.getElementById("header-logo-title").textContent = localStorage.getItem('list-title');
+    initUserData();
+
+
+
 
 }
 
@@ -158,5 +160,6 @@ function confirmTitle() {
     var descriptionText = document.getElementById("descriptionEditInput").value;
 
     document.getElementById("header-logo-title").innerHTML = descriptionText;
+    localStorage.setItem('list-title', descriptionText);
 
 }

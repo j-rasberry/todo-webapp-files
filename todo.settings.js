@@ -11,12 +11,12 @@ document.getElementById('settings-menu-hamburger-image').addEventListener('click
 
 });
 document.getElementById('settings-menu-item-clear-data').addEventListener('click', function() {
-    localStorage.removeItem('userdata');
-    localStorage.removeItem('custom-background');
-    listItems.clear();
+    localStorage.clear();
     document.getElementById('item-list').innerHTML = "";
     document.getElementById("custom-background-input").value = null;
     document.body.setAttribute("style", "background-image:url('')");
+    document.getElementById("header-logo-title").innerHTML = "New Project";
+
 
 
 });
